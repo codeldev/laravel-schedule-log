@@ -1,0 +1,62 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        $tables = config('laravel-schedule-log.tables');
+
+        throw_if(empty($tables), 'Error: config/laravel-schedule-log.php not loaded. Run [php artisan config:clear] and try again.');
+        throw_if(empty(trim($tables['commands'] ?? '')), 'Error: tables.commands value is empty in config/laravel-schedule-log.php');
+        throw_if(empty(trim($tables['history'] ?? '')), 'Error: tables.history value is empty in config/laravel-schedule-log.php');
+
+        Schema::create("{$tables['commands']}", static function (Blueprint $table): void
+        {
+            $table->uuid('id')
+                ->primary();
+
+            $table->string('command')
+                ->unique();
+
+            $table->string('description')
+                ->nullable();
+
+            $table->timestamps();
+        });
+
+        Schema::create("{$tables['history']}", static function (Blueprint $table) use ($tables): void
+        {
+            $table->uuid('id')
+                ->primary();
+
+            $table->foreignUuid('scheduled_command_id')
+                ->index()
+                ->constrained("{$tables['commands']}")
+                ->cascadeOnDelete();
+
+            $table->timestamp('started_at');
+
+            $table->timestamp('completed_at')
+                ->nullable();
+
+            $table->unsignedTinyInteger('status');
+
+            $table->text('output')
+                ->nullable();
+
+            $table->text('error')
+                ->nullable();
+
+            $table->unsignedInteger('duration_ms')
+                ->nullable();
+
+            $table->timestamps();
+
+            $table->index('created_at');
+        });
+    }
+};
