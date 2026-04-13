@@ -1,0 +1,14 @@
+parameters:
+    level: max
+
+    paths:
+        - src
+        - config
+
+    excludePaths:
+        - resources/*
+        - tests/*
+
+    ignoreErrors:
+        - identifier: larastan.noEnvCallsOutsideOfConfig
+          path: config/*
