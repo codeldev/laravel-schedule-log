@@ -24,7 +24,7 @@
         "larastan/larastan": "^3.9.3",
         "laravel/pint": "^1.29",
         "nunomaduro/collision": "^8.9.3",
-        "nunomaduro/pao": "0.x-dev",
+        "nunomaduro/pao": "1.1.2",
         "orchestra/testbench": "^11.1.0",
         "peckphp/peck": "^0.3.0",
         "pestphp/pest": "^4.4.6",
